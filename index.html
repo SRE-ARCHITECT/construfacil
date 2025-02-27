@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2196F3">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered successfully:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConstruFácil - Orçamento de Construção</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>ConstruFácil</h1>
+            <p>Sistema de Orçamento para Construção</p>
+        </header>
+
+        <main class="main-content">
+            <section class="form-section">
+                <h2>Adicionar Material</h2>
+                <form id="materialForm" class="material-form">
+                    <div class="form-group">
+                        <label for="categoria">Categoria:</label>
+                        <select id="categoria" name="categoria" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="alvenaria">Alvenaria</option>
+                            <option value="hidraulica">Hidráulica</option>
+                            <option value="eletrica">Elétrica</option>
+                            <option value="acabamento">Acabamento</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="material">Material:</label>
+                        <input type="text" id="material" name="material" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantidade">Quantidade:</label>
+                        <div class="quantity-container" style="display: flex; gap: 10px;">
+                            <input type="number" id="quantidade" name="quantidade" min="1" required style="flex: 1;">
+                            <select id="unidade" name="unidade" required style="width: 120px;">
+                                <option value="unidade">Unidade(s)</option>
+                                <option value="metro">Metro(s)</option>
+                                <option value="litro">Litro(s)</option>
+                                <option value="kilo">Kilo(s)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="preco">Preço Unitário (R$):</label>
+                        <input type="number" id="preco" name="preco" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="area">Área (m²):</label>
+                        <input type="number" id="area" name="area" step="0.01" min="0">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Adicionar ao Orçamento</button>
+                </form>
+            </section>
+
+            <section class="list-section">
+                <h2>Lista de Materiais</h2>
+                <div class="filter-section">
+                    <label for="filterCategoria">Filtrar por Categoria:</label>
+                    <select id="filterCategoria">
+                        <option value="todos">Todos</option>
+                        <option value="alvenaria">Alvenaria</option>
+                        <option value="hidraulica">Hidráulica</option>
+                        <option value="eletrica">Elétrica</option>
+                        <option value="acabamento">Acabamento</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                <div id="materialList" class="material-list"></div>
+                <div class="total-section">
+                    <p>Total do Orçamento: <span id="total-value">R$ 0,00</span></p>
+                </div>
+                <div class="action-buttons">
+                    <button onclick="exportarPDF()" class="btn btn-secondary">Exportar PDF</button>
+                    <button onclick="salvarOrcamento()" class="btn btn-secondary">Salvar Orçamento</button>
+                    <button onclick="compartilharViaWhatsApp()" class="btn btn-primary whatsapp-button">
+                        <img src="assets/whatsapp-icon.svg" alt="WhatsApp" class="whatsapp-icon">
+                        Compartilhar via WhatsApp
+                    </button>
+                </div>
+            </section>
+
+            <section class="saved-budgets-section">
+                <h2>Orçamentos Salvos</h2>
+                <div id="savedBudgetsList"></div>
+            </section>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
