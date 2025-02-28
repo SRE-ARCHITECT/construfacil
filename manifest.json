@@ -4,7 +4,7 @@
   "description": "Aplicativo para gerenciamento de orçamentos de construção",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#fffdb0",
   "theme_color": "#2196F3",
   "icons": [
     {
@@ -19,5 +19,11 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "lang": "pt",
+  "categories": [
+    "finance",
+    "shopping",
+    "utilities"
   ]
 }
