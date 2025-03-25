@@ -70,10 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (consumo > 0) {
                 novoMaterial.quantidade = Math.ceil(area * consumo * perda);
                 novoMaterial.porMetroQuadrado = consumo;
-                novoMaterial.total = calculateTotal(novoMaterial.quantidade, preco, area);
+                novoMaterial.total = area * novoMaterial.quantidade * preco;
             } else if (categoria === 'acabamento') {
                 novoMaterial.quantidade = Math.ceil(area * novoMaterial.porMetroQuadrado * perda);
-                novoMaterial.total = calculateTotal(novoMaterial.quantidade, preco, area);
+                novoMaterial.total = area * novoMaterial.quantidade * preco;
             }
         } else {
             // When area is not provided, simply multiply quantity by price
@@ -93,46 +93,33 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function atualizarLista() {
         const categoriaFiltrada = filterCategoria.value;
-        const fragment = document.createDocumentFragment();
+        materialList.innerHTML = '';
         let total = 0;
         
         const materiaisFiltrados = categoriaFiltrada === 'todos' 
             ? materiais 
             : materiais.filter(item => item.categoria === categoriaFiltrada);
 
-        if (materiaisFiltrados.length === 0) {
-            const emptyMessage = document.createElement('div');
-            emptyMessage.className = 'alert alert-info';
-            emptyMessage.textContent = 'Nenhum material encontrado';
-            fragment.appendChild(emptyMessage);
-        } else {
-            materiaisFiltrados.forEach((item, index) => {
-                const materialItem = document.createElement('div');
-                materialItem.className = 'material-item';
-                materialItem.innerHTML = `
-                    <div class="material-info">
-                        <strong class="material-name">${item.material}</strong> 
-                        <span class="material-category">(${item.categoria})</span><br>
-                        <span class="material-details">
-                            ${item.quantidade} ${item.unidade} x R$ ${item.preco.toFixed(2)}
-                            ${item.area ? `<br>Área: ${item.area}m² (${item.porMetroQuadrado.toFixed(2)} por m²)` : ''}
-                        </span>
-                    </div>
-                    <div class="material-actions">
-                        <strong class="material-total">R$ ${item.total.toFixed(2)}</strong>
-                        <button onclick="removerMaterial(${index})" class="btn btn-danger btn-sm" 
-                                title="Remover material">
-                            <i class="fas fa-trash"></i> Remover
-                        </button>
-                    </div>
-                `;
-                fragment.appendChild(materialItem);
-                total += item.total;
-            });
-        }
-
-        materialList.innerHTML = '';
-        materialList.appendChild(fragment);
+        materiaisFiltrados.forEach((item, index) => {
+            const materialItem = document.createElement('div');
+            materialItem.className = 'material-item';
+            materialItem.innerHTML = `
+                <div>
+                    <strong>${item.material}</strong> (${item.categoria})<br>
+                    ${item.quantidade} ${item.unidade} x R$ ${item.preco.toFixed(2)}
+                    ${item.area ? `<br>Área: ${item.area}m² (${item.porMetroQuadrado.toFixed(2)} por m²)` : ''}
+                </div>
+                <div>
+                    <strong>R$ ${item.total.toFixed(2)}</strong>
+                    <button onclick="removerMaterial(${index})" class="btn btn-primary" style="margin-left: 10px; padding: 5px 10px;">
+                        Remover
+                    </button>
+                </div>
+            `;
+            materialList.appendChild(materialItem);
+            total += item.total;
+        });
+        
         totalValue.textContent = `R$ ${total.toFixed(2)}`;
     }
 
