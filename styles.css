@@ -95,9 +95,11 @@ input:focus {
     box-shadow: 0 4px 8px rgba(37, 211, 102, 0.3);
 }
 
-.whatsapp-button img {
+.whatsapp-icon {
     width: 24px;
     height: 24px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .btn {
