@@ -253,7 +253,18 @@ input:focus {
     }
     
     @media (max-width: 480px) {
-        /* ... código existente ... */
+        /* Estilos existentes */
+        
+        /* Estilo para o container de anúncios */
+        .ad-container {
+            width: 100%;
+            margin: 20px auto;
+            text-align: center;
+            overflow: hidden;
+            clear: both;
+        }
+        
+        /* Resto dos estilos */
         
         .footer {
             padding: 15px 0;
