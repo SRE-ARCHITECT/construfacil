@@ -95,11 +95,9 @@ input:focus {
     box-shadow: 0 4px 8px rgba(37, 211, 102, 0.3);
 }
 
-.whatsapp-icon {
+.whatsapp-button img {
     width: 24px;
     height: 24px;
-    display: inline-block;
-    vertical-align: middle;
 }
 
 .btn {
@@ -221,5 +219,49 @@ input:focus {
 
     #unidade {
         width: 100%;
+    }
+
+    /* Estilos para o rodapé */
+    .footer {
+        background-color: #1976d2;
+        color: white;
+        padding: 20px 0;
+        margin-top: 40px;
+        text-align: center;
+    }
+    
+    .footer-links {
+        margin-bottom: 10px;
+    }
+    
+    .footer-links a {
+        color: white;
+        text-decoration: none;
+        padding: 0 10px;
+        font-weight: 500;
+        transition: opacity 0.3s;
+    }
+    
+    .footer-links a:hover {
+        opacity: 0.8;
+        text-decoration: underline;
+    }
+    
+    .copyright {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    
+    @media (max-width: 480px) {
+        /* ... código existente ... */
+        
+        .footer {
+            padding: 15px 0;
+        }
+        
+        .footer-links a {
+            display: block;
+            padding: 5px 0;
+        }
     }
 }

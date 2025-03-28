@@ -180,56 +180,89 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+        // Verificar se a biblioteca jsPDF está disponível
+        if (typeof jspdf === 'undefined') {
+            // Se não estiver disponível, carregá-la dinamicamente
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            script.onload = function() {
+                gerarPDF();
+            };
+            document.head.appendChild(script);
+        } else {
+            gerarPDF();
+        }
         
-        doc.setFontSize(20);
-        doc.text('Orçamento ConstruFácil', 20, 20);
-        
-        doc.setFontSize(12);
-        let yPos = 40;
-        let total = 0;
+        function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(20);
+            doc.text('Orçamento ConstruFácil', 20, 20);
+            
+            doc.setFontSize(12);
+            let yPos = 40;
+            let total = 0;
 
-        materiais.forEach((item) => {
-            doc.text(`${item.material} (${item.categoria})`, 20, yPos);
-            doc.text(`${item.quantidade} x R$ ${item.preco.toFixed(2)} = R$ ${item.total.toFixed(2)}`, 20, yPos + 7);
-            if (item.area > 0) {
-                doc.text(`Área: ${item.area}m² (${item.porMetroQuadrado.toFixed(2)} por m²)`, 20, yPos + 14);
-                yPos += 7;
-            }
-            yPos += 20;
-            total += item.total;
-        });
+            materiais.forEach((item) => {
+                doc.text(`${item.material} (${item.categoria})`, 20, yPos);
+                doc.text(`${item.quantidade} ${item.unidade} x R$ ${item.preco.toFixed(2)} = R$ ${item.total.toFixed(2)}`, 20, yPos + 7);
+                if (item.area > 0) {
+                    doc.text(`Área: ${item.area}m² (${item.porMetroQuadrado.toFixed(2)} por m²)`, 20, yPos + 14);
+                    yPos += 7;
+                }
+                yPos += 20;
+                total += item.total;
+                
+                // Adicionar nova página se necessário
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+            });
 
-        doc.setFontSize(14);
-        doc.text(`Total: R$ ${total.toFixed(2)}`, 20, yPos);
-        
-        doc.save('orcamento-construfacil.pdf');
+            doc.setFontSize(14);
+            doc.text(`Total: R$ ${total.toFixed(2)}`, 20, yPos);
+            
+            doc.save('orcamento-construfacil.pdf');
+        }
     };
 
+    // Expondo a função compartilharViaWhatsApp no escopo global
     window.compartilharViaWhatsApp = () => {
         if (materiais.length === 0) {
             alert('Adicione materiais ao orçamento antes de compartilhar.');
             return;
         }
-
-        let mensagem = 'Orçamento ConstruFácil\n\n';
-        let total = 0;
-
-        materiais.forEach((item) => {
-            mensagem += `${item.material} (${item.categoria})\n`;
-            mensagem += `${item.quantidade} x R$ ${item.preco.toFixed(2)} = R$ ${item.total.toFixed(2)}\n`;
-            if (item.area > 0) {
-                mensagem += `Área: ${item.area}m² (${item.porMetroQuadrado.toFixed(2)} por m²)\n`;
+        
+        const totalValue = document.getElementById('total-value').textContent;
+        
+        // Versão otimizada da mensagem para WhatsApp
+        let mensagem = "🏗️ *Orçamento ConstruFácil* 🏗️\n\n";
+        
+        // Agrupar materiais por categoria para uma mensagem mais organizada e compacta
+        const categorias = {};
+        materiais.forEach(item => {
+            if (!categorias[item.categoria]) {
+                categorias[item.categoria] = [];
             }
-            mensagem += '\n';
-            total += item.total;
+            categorias[item.categoria].push(item);
         });
-
-        mensagem += `Total: R$ ${total.toFixed(2)}`;
-
-        const encodedMessage = encodeURIComponent(mensagem);
-        window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+        
+        // Criar mensagem por categoria
+        for (const categoria in categorias) {
+            mensagem += `*${categoria.toUpperCase()}*\n`;
+            categorias[categoria].forEach(item => {
+                mensagem += `- ${item.material}: ${item.quantidade} ${item.unidade} = R$ ${item.total.toFixed(2)}\n`;
+            });
+            mensagem += "\n";
+        }
+        
+        mensagem += `*TOTAL: ${totalValue}*\n\n`;
+        mensagem += "https://construfacil.app.br/";
+        
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensagem)}`;
+        window.open(whatsappUrl, '_blank');
     };
 
     // Initialize saved budgets list
