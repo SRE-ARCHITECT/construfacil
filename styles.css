@@ -276,3 +276,36 @@ input:focus {
         }
     }
 }
+
+/* Estilo para o botão de contato do desenvolvedor */
+.dev-contact-btn {
+    display: inline-block;
+    margin-left: 15px;
+    padding: 5px 12px;
+    background-color: #ffffff;
+    color: #1976d2;
+    border-radius: 4px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.dev-contact-btn:hover {
+    background-color: #e0e0e0;
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 480px) {
+    .footer-links a {
+        display: block;
+        padding: 5px 0;
+        margin: 5px 0;
+    }
+    
+    .dev-contact-btn {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
